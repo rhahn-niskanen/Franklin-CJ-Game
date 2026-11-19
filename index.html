@@ -1023,13 +1023,17 @@ const S4 = {
 
   /* benchmark packages; totals are computed from EFFECTS at render   */
   benchmarks: [
-    {n:'Most punitive',         kind:'arch', ids:['longer_sentences','hot_spot','cameras'], side:-1, dy:{crimes:0,dollars:0},
-     note:'longer sentences + mandatory minimums together cost $110M and don’t fit'},
-    {n:'Most lenient',          kind:'arch', ids:['earned_time','compassionate_release','simplify_supervision','clean_slate','indigent_defense','treatment','reentry','inprison_programming','summer_jobs'], side:-1, dy:{crimes:0,dollars:14}, note:''},
+    {n:'Prison + policing',     kind:'arch', ids:['longer_sentences','hot_spot','cameras'], side:-1, dy:{crimes:0,dollars:0},
+     note:'the most sentencing-heavy mix that fits — the two flagship punitive items alone (longer sentences + mandatory minimums) cost $110M. Most of this package’s effect comes from its two policing items; see Prison expansion only for sentencing by itself'},
+    {n:'Decarceration-first',   kind:'arch', ids:['earned_time','compassionate_release','simplify_supervision','clean_slate','indigent_defense','treatment','reentry','inprison_programming','summer_jobs'], side:-1, dy:{crimes:0,dollars:14},
+     note:'every release and record reform, plus treatment, reentry, and prevention — shrinks the prison footprint while funding rehabilitation'},
     {n:'Treatment-first',       kind:'arch', ids:['treatment','cvi','reentry','summer_jobs'], side:1, dy:{crimes:0,dollars:14}, note:''},
-    {n:'Enforcement-first',     kind:'arch', ids:['hire_police','shooting_units','crime_lab','hot_spot','cameras'], side:1, dy:{crimes:0,dollars:0}, note:''},
-    {n:'Best value per dollar', kind:'arch', ids:['hot_spot','cbt_youth','shooting_units','crime_lab','summer_jobs','cvi','inprison_programming','earned_time','compassionate_release','simplify_supervision'], side:1, dy:{crimes:-12,dollars:0},
-     note:'picked to maximize dollars saved'},
+    {n:'Certainty-first',       kind:'arch', ids:['hire_police','shooting_units','crime_lab','hot_spot','cameras'], side:1, dy:{crimes:0,dollars:0},
+     note:'all five enforcement options — the ones that raise the chance of being caught, rather than the punishment once caught'},
+    {n:'Most harm averted',     kind:'arch', ids:['hot_spot','cbt_youth','shooting_units','crime_lab','summer_jobs','cvi','inprison_programming','earned_time','compassionate_release','simplify_supervision'], side:1, dy:{crimes:-12,dollars:0},
+     note:'picked to maximize social-cost dollars saved'},
+    {n:'Most crimes averted',   kind:'arch', ids:['hot_spot','cameras','crime_lab','treatment','cbt_youth','inprison_programming','earned_time','compassionate_release','simplify_supervision'], side:-1, dy:{crimes:0,dollars:0},
+     note:'picked to maximize the sheer number of crimes averted — no new prison in it'},
     {n:'Policing only',         kind:'mini', ids:['hire_police','hot_spot','cameras'], side:-1, dy:{crimes:0,dollars:0}, note:''},
     {n:'Investigations only',   kind:'mini', ids:['shooting_units','crime_lab'], side:1, dy:{crimes:0,dollars:0}, note:''},
     {n:'Street prevention only',kind:'mini', ids:['cvi','summer_jobs','cbt_youth'], side:-1, dy:{crimes:0,dollars:-12}, note:''},
