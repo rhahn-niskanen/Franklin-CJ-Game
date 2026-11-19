@@ -361,14 +361,17 @@ footer.app .spacer{flex:1}
 .s4stats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:30px 0 0}
 .s4stats .v{font-family:var(--serif);font-weight:700;font-size:36px;line-height:1.15;margin-top:2px}
 .s4stats .s{font-size:13.5px;color:var(--teal-800)}
+.printonly{display:none}
 
 @media (max-width:900px){
   .catgrid,.stats,.finallist,.s4stats{grid-template-columns:1fr}
   .hdr{height:auto;flex-wrap:wrap;gap:12px;padding-top:10px;padding-bottom:10px}
   .steps{order:3;width:100%;overflow-x:auto}
   .budgetbar{top:auto;position:static}
-  .bar .in{flex-wrap:wrap}
-  .chips{order:3;width:100%}
+  .bar .in{flex-wrap:wrap;gap:10px 14px}
+  .chips{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .chip{flex:none}
+  .bar .btn{padding:9px 14px;font-size:12.5px}
 }
 @media print{
   /* Prints the screen you're on. */
@@ -380,6 +383,12 @@ footer.app .spacer{flex:1}
   .opt,.trow,.panel,.cat,.reveal{break-inside:avoid}
   .opt:not([aria-pressed="true"]){opacity:.55}
   a[href]::after{content:""}
+  /* the effects printout: keep the dark chart panel and fit it to the page,
+     and include the printed copy of the package list */
+  .printonly{display:block}
+  .chartwrap{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #chartHost{overflow:visible}
+  #chartHost svg{min-width:0!important}
 }
 </style>
 </head>
@@ -521,6 +530,15 @@ footer.app .spacer{flex:1}
       <div class="legend" id="s4legend"></div>
       <div id="chartHost"></div>
       <div class="tip" id="s4tip"></div>
+    </div>
+
+    <!-- printed with the effects screen so the PDF carries the choices -->
+    <div class="panel printonly" id="s4pkg">
+      <h2>Your package</h2>
+      <div class="body">
+        <ul class="finallist" id="s4pkgList"></ul>
+        <div class="totalrow"><span>Net new spending</span><span class="big" id="s4pkgTotal">$0M</span></div>
+      </div>
     </div>
 
     <div class="panel">
@@ -1286,6 +1304,22 @@ function s4layout(){
   $('#s4count').textContent = `Your package: ${state.pkg.length} items · ${money(d.mine.net)} net` +
     (SHARE.connected ? ' · shared with other players' : '');
   s4statsTiles(d.mine);
+  /* print-only package list, so the saved PDF carries the choices */
+  const pl = $('#s4pkgList');
+  pl.innerHTML = '';
+  state.pkg.forEach(id => {
+    const o = OPT[id];
+    const li = document.createElement('li');
+    li.style.setProperty('--cc', CAT[o.cat].color);
+    li.innerHTML = `<span class="n"><span class="dot"></span>${o.name}</span>` +
+      (o.cost < 0 ? `<span class="c save">saves $${-o.cost}M</span>` : `<span class="c">$${o.cost}M</span>`);
+    pl.appendChild(li);
+  });
+  $('#s4pkgTotal').textContent = money(d.mine.net);
+  /* on narrow screens the chart pans horizontally: start it where the
+     packages cluster (the right side), not at the empty origin        */
+  const ch = $('#chartHost');
+  if(ch.scrollWidth > ch.clientWidth + 4) ch.scrollLeft = S4.view === 'bundles' ? ch.scrollWidth : 0;
 }
 
 function renderS4(){
